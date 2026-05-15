@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0D1F13">
+<title>Kefira Cash</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0D1F13; --bg2:#122018; --card:#17291D; --card2:#1D3325;
+  --green:#4ADE80; --green2:#86EFAC; --greendim:#16A34A;
+  --cash:#F59E0B; --telebirr:#3B82F6; --bank:#8B5CF6; --mpesa:#EF4444;
+  --cash-bg:#451A03; --telebirr-bg:#1E1B4B; --bank-bg:#2E1065; --mpesa-bg:#450A0A;
+  --txt:#F0FDF4; --txt2:#86EFAC; --txt3:#4ADE8066; --border:#4ADE8022;
+  --rad:18px; --radsm:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);overflow:hidden}
+
+/* ── APP SHELL ── */
+.shell{display:flex;flex-direction:column;height:100vh;height:100dvh;max-width:430px;margin:0 auto;background:var(--bg)}
+
+/* ── HEADER ── */
+.hdr{background:var(--bg2);padding:44px 20px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.hdr-brand{display:flex;align-items:center;gap:10px}
+.brand-ic{width:38px;height:38px;background:var(--greendim);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.brand-name{font-size:17px;font-weight:800;color:var(--txt);letter-spacing:-0.01em}
+.brand-date{font-size:11px;color:var(--txt3);margin-top:1px}
+.hdr-actions{display:flex;gap:8px}
+.hdr-btn{width:36px;height:36px;border-radius:50%;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;color:var(--txt2)}
+
+/* ── NET TOTAL BANNER ── */
+.net-banner{background:var(--card);border:1px solid var(--border);border-radius:var(--rad);margin:0 16px 0;padding:16px 18px;display:flex;align-items:center;justify-content:space-between}
+.net-left .nl{font-size:11px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
+.net-left .nv{font-size:32px;font-weight:800;color:var(--green);letter-spacing:-0.02em;line-height:1}
+.net-left .nsub{font-size:11px;color:var(--txt3);margin-top:4px}
+.net-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.net-mini{font-size:11px;font-weight:700;text-align:right}
+.nm-exp{color:#FCA5A5}
+.nm-profit{color:var(--green2)}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:6px;padding:14px 16px 0;flex-shrink:0}
+.tab{flex:1;padding:10px 6px;border-radius:var(--radsm);font-size:12px;font-weight:700;text-align:center;cursor:pointer;border:1px solid var(--border);background:var(--card);color:var(--txt3);transition:all .18s;letter-spacing:0.01em}
+.tab.active{background:var(--green);color:#0D1F13;border-color:var(--green)}
+
+/* ── SCROLLABLE BODY ── */
+.body{flex:1;overflow-y:auto;overflow-x:hidden;padding:14px 16px 100px}
+.body::-webkit-scrollbar{display:none}
+
+/* ── METHOD BUTTONS (main income buttons) ── */
+.method-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.method-btn{border-radius:var(--rad);padding:18px 14px;display:flex;flex-direction:column;gap:6px;cursor:pointer;border:2px solid transparent;position:relative;overflow:hidden;transition:transform .12s, border-color .18s;user-select:none}
+.method-btn:active{transform:scale(0.96)}
+.method-btn.cash{background:var(--cash-bg);border-color:#92400E}
+.method-btn.telebirr{background:var(--telebirr-bg);border-color:#1D4ED8}
+.method-btn.bank{background:var(--bank-bg);border-color:#6D28D9}
+.method-btn.mpesa{background:var(--mpesa-bg);border-color:#B91C1C}
+.mb-icon{font-size:26px}
+.mb-name{font-size:15px;font-weight:800;color:var(--txt)}
+.mb-total{font-size:22px;font-weight:800;letter-spacing:-0.02em}
+.mb-total.cash{color:var(--cash)}
+.mb-total.telebirr{color:#93C5FD}
+.mb-total.bank{color:#C4B5FD}
+.mb-total.mpesa{color:#FCA5A5}
+.mb-count{font-size:10px;font-weight:600;color:rgba(255,255,255,0.4);margin-top:2px}
+.mb-tap{font-size:10px;font-weight:700;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.06em;margin-top:4px}
+
+/* ── QUICK ADD STRIP ── */
+.section-label{font-size:11px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px}
+.quick-strip{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:16px}
+.quick-strip::-webkit-scrollbar{display:none}
+.quick-chip{background:var(--card2);border:1px solid var(--border);border-radius:30px;padding:7px 14px;font-size:13px;font-weight:700;color:var(--txt2);white-space:nowrap;cursor:pointer;flex-shrink:0;transition:all .15s}
+.quick-chip:active{background:var(--greendim);color:#fff;transform:scale(0.95)}
+
+/* ── TRANSACTION LOG ── */
+.tx-log{display:flex;flex-direction:column;gap:0}
+.tx-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.tx-row:last-child{border-bottom:none}
+.tx-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.tx-dot.cash{background:var(--cash)}
+.tx-dot.telebirr{background:#93C5FD}
+.tx-dot.bank{background:#C4B5FD}
+.tx-dot.mpesa{background:#FCA5A5}
+.tx-dot.expense{background:#FCA5A5}
+.tx-info{flex:1;min-width:0}
+.tx-title{font-size:13px;font-weight:600;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tx-meta{font-size:11px;color:var(--txt3);margin-top:1px;display:flex;gap:6px}
+.tx-badge{font-size:9px;font-weight:800;padding:2px 7px;border-radius:20px;text-transform:uppercase}
+.tx-badge.cash{background:#78350F;color:#FDE68A}
+.tx-badge.telebirr{background:#1E1B4B;color:#93C5FD}
+.tx-badge.bank{background:#2E1065;color:#C4B5FD}
+.tx-badge.mpesa{background:#450A0A;color:#FCA5A5}
+.tx-badge.expense{background:#450A0A;color:#FCA5A5}
+.tx-amt{font-size:15px;font-weight:800;flex-shrink:0}
+.tx-amt.inc{color:var(--green2)}
+.tx-amt.exp{color:#FCA5A5}
+.tx-del{background:none;border:none;color:var(--txt3);font-size:16px;cursor:pointer;padding:4px;flex-shrink:0}
+
+/* ── EXPENSE CATS ── */
+.exp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.exp-cat{background:var(--card);border:1px solid var(--border);border-radius:var(--radsm);padding:12px 8px;text-align:center;cursor:pointer;transition:all .15s}
+.exp-cat:active{transform:scale(0.95);background:var(--card2)}
+.ec-icon{font-size:22px;margin-bottom:4px}
+.ec-name{font-size:10px;font-weight:700;color:var(--txt2)}
+.ec-total{font-size:11px;font-weight:800;color:#FCA5A5;margin-top:2px}
+
+/* ── SUMMARY SECTION ── */
+.summary-block{background:var(--card);border:1px solid var(--border);border-radius:var(--rad);padding:16px;margin-bottom:12px}
+.sb-title{font-size:12px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:12px}
+.sb-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.sb-row:last-child{border-bottom:none}
+.sb-label{font-size:13px;font-weight:500;color:var(--txt2);display:flex;align-items:center;gap:8px}
+.sb-val{font-size:15px;font-weight:800;color:var(--txt)}
+.sb-row.total .sb-label{font-size:14px;font-weight:700;color:var(--txt)}
+.sb-row.total .sb-val{font-size:18px;color:var(--green)}
+.sb-row.loss .sb-val{color:#FCA5A5}
+
+/* ── BOTTOM ACTION BAR ── */
+.bottom-bar{position:absolute;bottom:0;left:0;right:0;max-width:430px;margin:0 auto;background:var(--bg2);border-top:1px solid var(--border);padding:10px 16px calc(10px + env(safe-area-inset-bottom));display:flex;gap:10px;z-index:50}
+.fab{flex:1;background:var(--green);color:#0D1F13;border:none;border-radius:var(--radsm);padding:15px;font-size:15px;font-weight:800;font-family:'Sora',sans-serif;cursor:pointer;letter-spacing:0.01em;display:flex;align-items:center;justify-content:center;gap:8px}
+.fab:active{opacity:0.85}
+.fab.sec{background:var(--card);color:var(--txt2);border:1px solid var(--border);font-size:13px;flex:0.55}
+
+/* ── AMOUNT INPUT MODAL ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:200;display:none;align-items:flex-end;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:var(--bg2);border-radius:24px 24px 0 0;width:100%;max-width:430px;padding:20px 20px calc(20px + env(safe-area-inset-bottom))}
+.modal-drag{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px}
+.modal-title{font-size:17px;font-weight:800;color:var(--txt);margin-bottom:6px}
+.modal-sub{font-size:12px;color:var(--txt3);margin-bottom:20px}
+.amount-display{font-size:44px;font-weight:800;text-align:center;color:var(--txt);letter-spacing:-0.02em;min-height:60px;margin-bottom:6px;padding:10px;border-radius:var(--radsm);background:var(--card);border:1px solid var(--border)}
+.note-input{width:100%;background:var(--card);border:1px solid var(--border);border-radius:var(--radsm);padding:13px 14px;font-size:14px;color:var(--txt);font-family:'Sora',sans-serif;outline:none;margin-bottom:16px}
+.note-input::placeholder{color:var(--txt3)}
+.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.key{background:var(--card);border:1px solid var(--border);border-radius:var(--radsm);padding:16px 8px;font-size:20px;font-weight:700;color:var(--txt);cursor:pointer;text-align:center;font-family:'Sora',sans-serif;transition:all .12s}
+.key:active{background:var(--card2);transform:scale(0.95)}
+.key.del{font-size:16px;color:var(--txt3)}
+.key.zero{grid-column:span 1}
+.modal-btn{width:100%;border:none;border-radius:var(--radsm);padding:16px;font-size:16px;font-weight:800;font-family:'Sora',sans-serif;cursor:pointer}
+.modal-btn.confirm{color:#0D1F13;margin-bottom:8px}
+.modal-btn.cancel{background:transparent;color:var(--txt3);border:1px solid var(--border)}
+
+/* ── TOAST ── */
+.toast-box{position:fixed;top:56px;left:50%;transform:translateX(-50%) translateY(-10px);z-index:999;pointer-events:none;opacity:0;transition:all .28s;white-space:nowrap}
+.toast-box.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast-inner{background:var(--card2);border:1px solid var(--green);border-radius:30px;padding:9px 20px;font-size:13px;font-weight:700;color:var(--green);display:flex;align-items:center;gap:7px}
+.toast-dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+
+/* ── EMPTY ── */
+.empty{text-align:center;padding:40px 16px;color:var(--txt3)}
+.empty-ic{font-size:36px;margin-bottom:10px;opacity:0.4}
+.empty-tx{font-size:13px;font-weight:500}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- HEADER -->
+  <div class="hdr">
+    <div class="hdr-top">
+      <div class="hdr-brand">
+        <div class="brand-ic">🍽️</div>
+        <div>
+          <div class="brand-name">Kefira</div>
+          <div class="brand-date" id="hdr-date">Loading…</div>
+        </div>
+      </div>
+      <div class="hdr-actions">
+        <div class="hdr-btn" onclick="showHistory()">📋</div>
+        <div class="hdr-btn" onclick="clearDay()">🔄</div>
+      </div>
+    </div>
+    <!-- NET BANNER -->
+    <div class="net-banner">
+      <div class="net-left">
+        <div class="nl">Total Income Today</div>
+        <div class="nv" id="net-total">0 ETB</div>
+        <div class="nsub" id="net-txcount">0 payments recorded</div>
+      </div>
+      <div class="net-right">
+        <div class="net-mini nm-exp">Expenses: <span id="net-exp">0</span> ETB</div>
+        <div class="net-mini nm-profit" id="net-profit-line">Profit: 0 ETB</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active" id="tab-income" onclick="switchTab('income')">💰 Receive Money</div>
+    <div class="tab" id="tab-expense" onclick="switchTab('expense')">🧾 Expenses</div>
+    <div class="tab" id="tab-summary" onclick="switchTab('summary')">📊 Summary</div>
+  </div>
+
+  <!-- BODY -->
+  <div class="body" id="main-body">
+    <!-- filled by JS -->
+  </div>
+
+  <!-- BOTTOM BAR -->
+  <div class="bottom-bar" id="bottom-bar">
+    <button class="fab sec" onclick="openQuickExpense()">🧾 Expense</button>
+    <button class="fab" id="fab-main" onclick="openAddIncome()">＋ Add Income</button>
+  </div>
+</div>
+
+<!-- AMOUNT MODAL -->
+<div class="modal-bg" id="amt-modal">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="modal-title" id="modal-title">Cash Payment</div>
+    <div class="modal-sub" id="modal-sub">Enter amount received</div>
+    <div class="amount-display" id="amt-display">0</div>
+    <input class="note-input" id="modal-note" placeholder="Note (optional) e.g. Table 3, lunch…">
+    <div class="keypad">
+      <button class="key" onclick="kp('1')">1</button>
+      <button class="key" onclick="kp('2')">2</button>
+      <button class="key" onclick="kp('3')">3</button>
+      <button class="key" onclick="kp('4')">4</button>
+      <button class="key" onclick="kp('5')">5</button>
+      <button class="key" onclick="kp('6')">6</button>
+      <button class="key" onclick="kp('7')">7</button>
+      <button class="key" onclick="kp('8')">8</button>
+      <button class="key" onclick="kp('9')">9</button>
+      <button class="key del" onclick="kpDel()">⌫</button>
+      <button class="key zero" onclick="kp('0')">0</button>
+      <button class="key" onclick="kp('00')">00</button>
+    </div>
+    <button class="modal-btn confirm" id="modal-confirm" onclick="confirmEntry()">✓ Save</button>
+    <button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-box" id="toast">
+  <div class="toast-inner"><div class="toast-dot"></div><span id="toast-msg">Saved!</span></div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const state = {
+  entries: [],     // {id, type:'income'|'expense', method, amount, note, time}
+  currentTab: 'income',
+  modalMode: null, // 'income-cash' | 'income-telebirr' etc | 'expense-CATNAME'
+  amtStr: '0'
+};
+
+const METHODS = [
+  {key:'cash',    label:'Cash',     icon:'💵', color:'var(--cash)'},
+  {key:'telebirr',label:'Telebirr', icon:'📱', color:'#93C5FD'},
+  {key:'bank',    label:'Bank',     icon:'🏦', color:'#C4B5FD'},
+  {key:'mpesa',   label:'M-Pesa',   icon:'📲', color:'#FCA5A5'},
+];
+const EXP_CATS = [
+  {key:'Asbeza',    icon:'🛒'}, {key:'Meat',       icon:'🥩'}, {key:'Injera',    icon:'🫓'},
+  {key:'Beer',      icon:'🍺'}, {key:'Draft Beer', icon:'🍻'}, {key:'Water',     icon:'💧'},
+  {key:'Vegetables',icon:'🥦'}, {key:'Soft Drinks',icon:'🥤'}, {key:'Transport', icon:'🚗'},
+  {key:'Salary',    icon:'👤'}, {key:'Rent',       icon:'🏠'}, {key:'Other',     icon:'📌'},
+];
+const QUICK_AMTS = [50,100,200,500,1000,2000,5000];
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+const now = new Date();
+const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+document.getElementById('hdr-date').textContent =
+  DAYS[now.getDay()] + ' • ' + now.getDate() + ' ' + MONTHS[now.getMonth()] + ' ' + now.getFullYear();
+
+renderTab('income');
+updateTotals();
+
+// ── TABS ──────────────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  state.currentTab = tab;
+  ['income','expense','summary'].forEach(t => {
+    document.getElementById('tab-'+t).classList.toggle('active', t===tab);
+  });
+  const fab = document.getElementById('fab-main');
+  if(tab==='income')  { fab.textContent='＋ Add Income';  fab.onclick=openAddIncome; }
+  if(tab==='expense') { fab.textContent='＋ Add Expense'; fab.onclick=openQuickExpense; }
+  if(tab==='summary') { fab.textContent='🔄 New Day';     fab.onclick=clearDay; }
+  renderTab(tab);
+}
+
+// ── RENDER TABS ───────────────────────────────────────────────────────────────
+function renderTab(tab) {
+  const body = document.getElementById('main-body');
+  if(tab==='income')  body.innerHTML = buildIncomeTab();
+  if(tab==='expense') body.innerHTML = buildExpenseTab();
+  if(tab==='summary') body.innerHTML = buildSummaryTab();
+}
+
+function buildIncomeTab() {
+  const totals = {};
+  METHODS.forEach(m => totals[m.key] = state.entries.filter(e=>e.type==='income'&&e.method===m.key).reduce((s,e)=>s+e.amount,0));
+  const counts = {};
+  METHODS.forEach(m => counts[m.key] = state.entries.filter(e=>e.type==='income'&&e.method===m.key).length);
+
+  const btns = METHODS.map(m=>`
+    <div class="method-btn ${m.key}" onclick="openModal('income','${m.key}')">
+      <div class="mb-icon">${m.icon}</div>
+      <div class="mb-name">${m.label}</div>
+      <div class="mb-total ${m.key}">${fmt(totals[m.key])} ETB</div>
+      <div class="mb-count">${counts[m.key]} payment${counts[m.key]!==1?'s':''}</div>
+      <div class="mb-tap">TAP TO ADD ＋</div>
+    </div>`).join('');
+
+  const incomeEntries = state.entries.filter(e=>e.type==='income').slice().reverse();
+  const log = incomeEntries.length ? incomeEntries.map(e=>`
+    <div class="tx-row">
+      <div class="tx-dot ${e.method}"></div>
+      <div class="tx-info">
+        <div class="tx-title">${e.note||e.method}</div>
+        <div class="tx-meta"><span class="tx-badge ${e.method}">${e.method.toUpperCase()}</span>${e.time}</div>
+      </div>
+      <div class="tx-amt inc">+${fmt(e.amount)}</div>
+      <button class="tx-del" onclick="deleteEntry(${e.id})">✕</button>
+    </div>`).join('') :
+    '<div class="empty"><div class="empty-ic">💸</div><div class="empty-tx">No income yet today<br>Tap a payment button above</div></div>';
+
+  const qs = QUICK_AMTS.map(a=>`<div class="quick-chip" onclick="openModalWithAmt('income','cash',${a})">${fmt(a)}</div>`).join('');
+
+  return `
+    <div class="method-grid">${btns}</div>
+    <div class="section-label">⚡ Quick Cash Amounts</div>
+    <div class="quick-strip">${qs}</div>
+    <div class="section-label">📋 Today's Income Log</div>
+    <div class="tx-log">${log}</div>`;
+}
+
+function buildExpenseTab() {
+  const cats = EXP_CATS.map(c=>{
+    const total = state.entries.filter(e=>e.type==='expense'&&e.method===c.key).reduce((s,e)=>s+e.amount,0);
+    return `<div class="exp-cat" onclick="openModal('expense','${c.key}')">
+      <div class="ec-icon">${c.icon}</div>
+      <div class="ec-name">${c.key}</div>
+      <div class="ec-total">${total>0?fmt(total)+' ETB':''}</div>
+    </div>`;
+  }).join('');
+
+  const expEntries = state.entries.filter(e=>e.type==='expense').slice().reverse();
+  const log = expEntries.length ? expEntries.map(e=>`
+    <div class="tx-row">
+      <div class="tx-dot expense"></div>
+      <div class="tx-info">
+        <div class="tx-title">${e.note||e.method}</div>
+        <div class="tx-meta"><span class="tx-badge expense">${e.method}</span>${e.time}</div>
+      </div>
+      <div class="tx-amt exp">-${fmt(e.amount)}</div>
+      <button class="tx-del" onclick="deleteEntry(${e.id})">✕</button>
+    </div>`).join('') :
+    '<div class="empty"><div class="empty-ic">🧾</div><div class="empty-tx">No expenses yet<br>Tap a category to add</div></div>';
+
+  return `
+    <div class="section-label">Tap a category to record expense</div>
+    <div class="exp-grid">${cats}</div>
+    <div class="section-label">📋 Expense Log</div>
+    <div class="tx-log">${log}</div>`;
+}
+
+function buildSummaryTab() {
+  const totalInc  = state.entries.filter(e=>e.type==='income').reduce((s,e)=>s+e.amount,0);
+  const totalExp  = state.entries.filter(e=>e.type==='expense').reduce((s,e)=>s+e.amount,0);
+  const profit    = totalInc - totalExp;
+
+  const methodRows = METHODS.map(m=>{
+    const t = state.entries.filter(e=>e.type==='income'&&e.method===m.key).reduce((s,e)=>s+e.amount,0);
+    return `<div class="sb-row">
+      <div class="sb-label"><span>${m.icon}</span>${m.label}</div>
+      <div class="sb-val" style="color:${m.color}">${fmt(t)} ETB</div>
+    </div>`;
+  }).join('');
+
+  const expRows = EXP_CATS.map(c=>{
+    const t = state.entries.filter(e=>e.type==='expense'&&e.method===c.key).reduce((s,e)=>s+e.amount,0);
+    if(!t) return '';
+    return `<div class="sb-row"><div class="sb-label"><span>${c.icon}</span>${c.key}</div><div class="sb-val" style="color:#FCA5A5">${fmt(t)} ETB</div></div>`;
+  }).join('');
+
+  return `
+    <div class="summary-block">
+      <div class="sb-title">💰 Income by Method</div>
+      ${methodRows}
+      <div class="sb-row total"><div class="sb-label">Total Income</div><div class="sb-val">${fmt(totalInc)} ETB</div></div>
+    </div>
+    <div class="summary-block">
+      <div class="sb-title">🧾 Expenses by Category</div>
+      ${expRows || '<div style="font-size:13px;color:var(--txt3);padding:8px 0">No expenses recorded</div>'}
+      <div class="sb-row total"><div class="sb-label">Total Expenses</div><div class="sb-val" style="color:#FCA5A5">${fmt(totalExp)} ETB</div></div>
+    </div>
+    <div class="summary-block">
+      <div class="sb-title">📈 Net Result</div>
+      <div class="sb-row total ${profit<0?'loss':''}">
+        <div class="sb-label">${profit>=0?'✅ Net Profit':'⚠️ Net Loss'}</div>
+        <div class="sb-val" style="color:${profit>=0?'var(--green)':'#FCA5A5'}">${fmt(Math.abs(profit))} ETB</div>
+      </div>
+    </div>
+    <div style="padding:4px 0 16px;display:grid;gap:10px">
+      <button onclick="exportSummary()" style="background:var(--card);border:1px solid var(--border);border-radius:var(--radsm);padding:14px;font-size:14px;font-weight:700;color:var(--txt2);font-family:'Sora',sans-serif;cursor:pointer">📤 Share / Export Summary</button>
+    </div>`;
+}
+
+// ── MODAL ─────────────────────────────────────────────────────────────────────
+function openModal(type, key) {
+  state.modalMode = {type, key};
+  state.amtStr = '0';
+  document.getElementById('amt-display').textContent = '0';
+  document.getElementById('modal-note').value = '';
+
+  const m = METHODS.find(x=>x.key===key);
+  const c = EXP_CATS.find(x=>x.key===key);
+  if(type==='income' && m) {
+    document.getElementById('modal-title').textContent = m.icon+' '+m.label+' Received';
+    document.getElementById('modal-sub').textContent = 'Enter amount received via '+m.label;
+    document.getElementById('modal-confirm').style.background = m.color.replace('var(--cash)','#F59E0B').replace('var(--green)','#4ADE80');
+    document.getElementById('modal-confirm').style.color = '#0D1F13';
+  } else if(type==='expense' && c) {
+    document.getElementById('modal-title').textContent = c.icon+' '+c.key+' Expense';
+    document.getElementById('modal-sub').textContent = 'Enter amount spent on '+c.key;
+    document.getElementById('modal-confirm').style.background = '#EF4444';
+    document.getElementById('modal-confirm').style.color = '#fff';
+  }
+  document.getElementById('amt-modal').classList.add('open');
+  document.getElementById('modal-note').placeholder = type==='income' ? 'Note (optional) e.g. Table 3, lunch sales…' : 'Note (optional) e.g. Market, supplier…';
+}
+
+function openAddIncome()    { openModal('income','cash'); }
+function openQuickExpense() { openModal('expense','Asbeza'); }
+
+function openModalWithAmt(type, key, amt) {
+  openModal(type, key);
+  state.amtStr = String(amt);
+  document.getElementById('amt-display').textContent = fmt(amt)+' ETB';
+}
+
+function closeModal() {
+  document.getElementById('amt-modal').classList.remove('open');
+  state.modalMode = null;
+}
+
+document.getElementById('amt-modal').addEventListener('click', e=>{
+  if(e.target===document.getElementById('amt-modal')) closeModal();
+});
+
+// ── KEYPAD ────────────────────────────────────────────────────────────────────
+function kp(v) {
+  if(state.amtStr==='0') state.amtStr = v;
+  else state.amtStr += v;
+  if(state.amtStr.length > 8) state.amtStr = state.amtStr.slice(0,-v.length);
+  const n = parseInt(state.amtStr)||0;
+  document.getElementById('amt-display').textContent = fmt(n)+' ETB';
+}
+function kpDel() {
+  state.amtStr = state.amtStr.slice(0,-1) || '0';
+  const n = parseInt(state.amtStr)||0;
+  document.getElementById('amt-display').textContent = n===0?'0':fmt(n)+' ETB';
+}
+
+// ── SAVE ──────────────────────────────────────────────────────────────────────
+function confirmEntry() {
+  const amt = parseInt(state.amtStr)||0;
+  if(!amt) { showToast('Enter an amount first'); return; }
+  const {type, key} = state.modalMode;
+  const note = document.getElementById('modal-note').value.trim();
+  const t = new Date();
+  const timeStr = t.getHours().toString().padStart(2,'0')+':'+t.getMinutes().toString().padStart(2,'0');
+  state.entries.push({id:Date.now(), type, method:key, amount:amt, note:note||key, time:timeStr});
+  closeModal();
+  updateTotals();
+  renderTab(state.currentTab);
+  const label = type==='income' ? 'Income' : 'Expense';
+  showToast(label+' '+fmt(amt)+' ETB saved ✓');
+}
+
+function deleteEntry(id) {
+  state.entries = state.entries.filter(e=>e.id!==id);
+  updateTotals();
+  renderTab(state.currentTab);
+  showToast('Entry removed');
+}
+
+// ── TOTALS ────────────────────────────────────────────────────────────────────
+function updateTotals() {
+  const inc = state.entries.filter(e=>e.type==='income').reduce((s,e)=>s+e.amount,0);
+  const exp = state.entries.filter(e=>e.type==='expense').reduce((s,e)=>s+e.amount,0);
+  const profit = inc - exp;
+  const count = state.entries.filter(e=>e.type==='income').length;
+  document.getElementById('net-total').textContent = fmt(inc)+' ETB';
+  document.getElementById('net-exp').textContent = fmt(exp);
+  document.getElementById('net-profit-line').textContent = (profit>=0?'Profit: ':'Loss: ')+fmt(Math.abs(profit))+' ETB';
+  document.getElementById('net-profit-line').style.color = profit>=0?'var(--green2)':'#FCA5A5';
+  document.getElementById('net-txcount').textContent = count+' payment'+(count!==1?'s':'')+' recorded';
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+function fmt(n) {
+  if(n>=1000000) return (n/1000000).toFixed(1)+'M';
+  if(n>=1000) return n.toLocaleString();
+  return n.toString();
+}
+
+function showToast(msg) {
+  document.getElementById('toast-msg').textContent = msg;
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2400);
+}
+
+function showHistory() { switchTab('summary'); }
+
+function clearDay() {
+  if(!confirm('Start a new day? This will clear today\'s entries.')) return;
+  state.entries = [];
+  updateTotals();
+  renderTab(state.currentTab);
+  showToast('New day started ✓');
+}
+
+function exportSummary() {
+  const inc = state.entries.filter(e=>e.type==='income').reduce((s,e)=>s+e.amount,0);
+  const exp = state.entries.filter(e=>e.type==='expense').reduce((s,e)=>s+e.amount,0);
+  const lines = ['Kefira Restaurant — Daily Summary', document.getElementById('hdr-date').textContent, '',
+    'INCOME', ...METHODS.map(m=>{
+      const t = state.entries.filter(e=>e.type==='income'&&e.method===m.key).reduce((s,e)=>s+e.amount,0);
+      return m.label+': '+t+' ETB';
+    }), 'Total Income: '+inc+' ETB', '',
+    'EXPENSES', ...EXP_CATS.map(c=>{
+      const t = state.entries.filter(e=>e.type==='expense'&&e.method===c.key).reduce((s,e)=>s+e.amount,0);
+      return t>0?c.key+': '+t+' ETB':null;
+    }).filter(Boolean), 'Total Expenses: '+exp+' ETB', '',
+    'Net '+(inc-exp>=0?'Profit':'Loss')+': '+Math.abs(inc-exp)+' ETB'];
+  if(navigator.share) {
+    navigator.share({title:'Kefira Daily Report', text:lines.join('\n')}).catch(()=>{});
+  } else {
+    alert(lines.join('\n'));
+  }
+}
+</script>
+</body>
+</html>
